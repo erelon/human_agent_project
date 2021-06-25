@@ -34,3 +34,6 @@ class Inception3Model(pl.LightningModule):
         loss = self.loss(y, y_hat)
         self.log("val_loss", loss)
         return loss
+
+    def predict(self, batch, batch_idx, dataloader_idx):
+        return self(batch)

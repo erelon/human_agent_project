@@ -42,13 +42,13 @@ if __name__ == '__main__':
     for vid in all_vilonece_images:
         num_of_imgs_in_vid = vid.shape[0]
         labels = torch.tensor(np.zeros([num_of_imgs_in_vid, 2]))
-        labels[:, 1] = 1
+        labels[:, VIOLENCE_LABEL] = 1
         vid_dataset = TensorDataset(torch.tensor(vid), labels)
         main_dataset.append(vid_dataset)
     for vid in all_nonvilonece_images:
         num_of_imgs_in_vid = vid.shape[0]
         labels = torch.tensor(np.zeros([num_of_imgs_in_vid, 2]))
-        labels[:, 0] = 1
+        labels[:, NONVIOLENCE_LABEL] = 1
         vid_dataset = TensorDataset(torch.tensor(vid), labels)
 
         main_dataset.append(vid_dataset)
