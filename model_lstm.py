@@ -56,6 +56,7 @@ class Inception3Model(pl.LightningModule):
         y_hat = self(x)
         loss = self.loss(y, y_hat)
         self.log("val_loss", loss)
+        self.log("val_acc", torch.argmax(y_hat) == y)
         return loss
 
     def predict(self, batch, batch_idx, dataloader_idx):
