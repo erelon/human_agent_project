@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import torch
+from sklearn.model_selection import train_test_split
 
 
 def create_path_csv():
@@ -8,13 +9,13 @@ def create_path_csv():
     for v in os.walk("Real Life Violence Dataset/Violence"):
         for vid in v[2]:
             if torch.cuda.is_available():
-                df = df.append({
+                df_v = df.append({
                     "path": os.getcwd() + "/" + v[0] + "/" + vid,
                     "label": 1
                 }
                     , ignore_index=True)
             else:
-                df = df.append({
+                df_v = df.append({
                     "path": os.getcwd() + "\\" + v[0].replace("/", "\\") + "\\" + vid,
                     "label": 1
                 }
@@ -23,16 +24,24 @@ def create_path_csv():
     for v in os.walk("Real Life Violence Dataset/NonViolence"):
         for vid in v[2]:
             if torch.cuda.is_available():
-                df = df.append({
+                df_nv = df.append({
                     "path": os.getcwd() + "/" + v[0] + "/" + vid,
                     "label": 0
                 }
                     , ignore_index=True)
             else:
-                df = df.append({
+                df_nv = df.append({
                     "path": os.getcwd() + "\\" + v[0].replace("/", "\\") + "\\" + vid,
                     "label": 0
                 }
                     , ignore_index=True)
-    df.to_csv("paths.csv", index=False)
-    return "paths.csv"
+
+    train_dfv, test_dfv = train_test_split(df_v, test_size=0.3)
+    train_dfvn, test_dfvn = train_test_split(df_nv, test_size=0.3)
+
+    train_df = pd.concat([train_dfv, train_dfvn])
+    test_df = pd.concat([test_dfv, test_dfvn])
+
+    train_df.to_csv("paths_train.csv", index=False)
+    test_df.to_csv("paths_test.csv", index=False)
+    return "paths_train.csv", "paths_test.csv"

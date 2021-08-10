@@ -11,6 +11,8 @@ __all__ = ['VideoFilePathToTensor', 'VideoFolderPathToTensor', 'VideoResize', 'V
            'VideoRandomHorizontalFlip',
            'VideoRandomVerticalFlip', 'VideoGrayscale']
 
+from torchvision.transforms import InterpolationMode
+
 
 class VideoFilePathToTensor(object):
     """ load video at given file path to torch.Tensor (C x L x H x W, C = 3) 
@@ -189,7 +191,7 @@ class VideoResize(object):
         interpolation (int, optional): Desired interpolation. Default is 'PIL.Image.BILINEAR'
     """
 
-    def __init__(self, size, interpolation=PIL.Image.BILINEAR):
+    def __init__(self, size, interpolation=InterpolationMode.BILINEAR):
         assert isinstance(size, collections.Iterable) and len(size) == 2
         self.size = size
         self.interpolation = interpolation
