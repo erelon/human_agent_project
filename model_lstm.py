@@ -1,18 +1,24 @@
+import gc
+
 import torch
 import pytorch_lightning as pl
 import torch.nn.functional as F
-from torchvision.models import Inception3
+from torchvision.models import Inception3, googlenet
+from torchmetrics import Accuracy
 
 
 class Inception3Model(pl.LightningModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.incept_out = None
-        self.model = Inception3(num_classes=2, transform_input=True)
+        self.model = googlenet(pretrained=True, num_classes=1000, transform_input=True)
         self.model.fc.register_forward_hook(self.create_activation_hook())
 
-        self.lstm = torch.nn.LSTM(input_size=2048, hidden_size=64, num_layers=1, batch_first=True)
+        self.lstm = torch.nn.LSTM(input_size=1024, hidden_size=64, num_layers=1, batch_first=True)
         self.linear = torch.nn.Linear(64, 2)
+
+        self.train_acc = Accuracy()
+        self.valid_acc = Accuracy()
 
     def create_activation_hook(self):
         def hook(model, input, output):
@@ -23,14 +29,14 @@ class Inception3Model(pl.LightningModule):
     def forward(self, x: torch.Tensor):
         x = x.permute([0, 2, 1, 3, 4])
         batch_size, timesteps, C, H, W = x.size()
-        c_in = x.view(batch_size * timesteps, C, H, W)
+        x = x.view(batch_size * timesteps, C, H, W)
 
         # The hook keeps the data
-        self.model(c_in)
-        c_out = self.incept_out
+        self.model(x)
+        x = self.incept_out
 
-        r_in = c_out.view(batch_size, timesteps, -1)
-        x, (h_n, h_c) = self.lstm(r_in)
+        x = x.view(batch_size, timesteps, -1)
+        x, (h_n, h_c) = self.lstm(x)
         x = self.linear(x[:, -1, :])
 
         x = F.softmax(x, dim=1)
@@ -49,6 +55,10 @@ class Inception3Model(pl.LightningModule):
         y_hat = self(x)
         loss = self.loss(y, y_hat)
         self.log("train_loss", loss)
+        self.log("train_acc", self.valid_acc(torch.argmax(y_hat).flatten(), y))
+        torch.cuda.empty_cache()
+        if batch_idx % 10 == 0:
+            gc.collect(generation=2)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -56,7 +66,10 @@ class Inception3Model(pl.LightningModule):
         y_hat = self(x)
         loss = self.loss(y, y_hat)
         self.log("val_loss", loss)
-        self.log("val_acc", torch.argmax(y_hat) == y)
+        self.log("val_acc", self.valid_acc(torch.argmax(y_hat).flatten(), y))
+        torch.cuda.empty_cache()
+        if batch_idx % 10 == 0:
+            gc.collect(generation=2)
         return loss
 
     def predict(self, batch, batch_idx, dataloader_idx):

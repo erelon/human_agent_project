@@ -72,4 +72,4 @@ if __name__ == '__main__':
 
     model = Inception3Model()
     t = pl.Trainer()
-    t.fit(model, train_dataloader)
+    t.fit(model, train_dataloader, valid_dataloader)
