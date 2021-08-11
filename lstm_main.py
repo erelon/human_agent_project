@@ -17,8 +17,8 @@ from video_dataloader import datasets
 from matplotlib import animation
 
 if __name__ == '__main__':
-    # path_train, path_test = create_path_csv()
-    path_train, path_test = "paths_train.csv", "paths_test.csv"
+    path_train, path_test = create_path_csv()
+    # path_train, path_test = "paths_train.csv", "paths_test.csv"
 
     train_videos = datasets.VideoLabelDataset(
         path_train,
