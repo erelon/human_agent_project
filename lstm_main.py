@@ -21,7 +21,7 @@ if __name__ == '__main__':
         transform=torchvision.transforms.Compose([
             vtransforms.VideoFilePathToTensor(fps=4, max_len=20, padding_mode="zero"),
             # vtransforms.VideoRandomCrop([512, 512]),
-            vtransforms.VideoResize([64, 64]),
+            vtransforms.VideoResize([224, 224]),
         ])
     )
     test_videos = datasets.VideoLabelDataset(
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         transform=torchvision.transforms.Compose([
             vtransforms.VideoFilePathToTensor(fps=4, max_len=20, padding_mode="zero"),
             # vtransforms.VideoRandomCrop([512, 512]),
-            vtransforms.VideoResize([64, 64]),
+            vtransforms.VideoResize([224, 224]),
         ])
     )
 

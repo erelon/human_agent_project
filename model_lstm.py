@@ -13,16 +13,16 @@ class Inception3Model(pl.LightningModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.incept_out = None
-        # self.model = googlenet(pretrained=True, num_classes=1000, transform_input=True)
-        # self.model.fc.register_forward_hook(self.create_activation_hook())
+        self.model_f = googlenet(pretrained=True, num_classes=1000, transform_input=True)
+        self.model_f.fc.register_forward_hook(self.create_activation_hook())
         # self.model.features.register_forward_hook(self.create_activation_hook())
 
         # self.lstm = torch.nn.LSTM(input_size=1024, hidden_size=128, num_layers=5, batch_first=True)
         # self.linear = torch.nn.Linear(128, 2)
-        self.model = MLSTMfcn(num_classes=2, max_seq_len=40, num_features=12288)
+        self.model = MLSTMfcn(num_classes=2, max_seq_len=40, num_features=1024)
         self.train_acc = Accuracy()
         self.valid_acc = Accuracy()
-        self.valid_auc = AUROC()
+        self.valid_auc = AUROC(num_classes=2)
 
     def create_activation_hook(self):
         def hook(model, input, output):
@@ -33,11 +33,14 @@ class Inception3Model(pl.LightningModule):
     def forward(self, x: torch.Tensor):
         x = x.permute([0, 2, 1, 3, 4])
         batch_size, timesteps, C, H, W = x.size()
-        x = x.reshape(batch_size, timesteps, C * H * W)
 
         # The hook keeps the data
+        x = x.reshape(batch_size * timesteps, C, H, W)
+        self.model_f(x)
+        x = self.incept_out
+
+        x = x.reshape(batch_size, timesteps, -1)
         x = self.model(x, [timesteps for i in range(batch_size)])
-        # x = self.incept_out
 
         # x = x.view(batch_size, timesteps, -1)
         # x, (h_n, h_c) = self.lstm(x)
