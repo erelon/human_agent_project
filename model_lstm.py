@@ -31,6 +31,11 @@ class Inception3Model(pl.LightningModule):
         return hook
 
     def forward(self, x: torch.Tensor):
+        """
+
+        :param x: Tensor of the shape (Batch, Channels, Timestamp(Length), Height, Width)
+        :return: Tensor with prediction for V/NV
+        """
         x = x.permute([0, 2, 1, 3, 4])
         batch_size, timesteps, C, H, W = x.size()
 
@@ -55,6 +60,7 @@ class Inception3Model(pl.LightningModule):
         return opt
 
     def loss(self, y, y_hat):
+        # This is Cross-Entropy loss
         return F.nll_loss(torch.log(y_hat), y)
 
     def training_step(self, batch, batch_idx):
