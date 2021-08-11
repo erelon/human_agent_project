@@ -5,17 +5,18 @@ from sklearn.model_selection import train_test_split
 
 
 def create_path_csv():
-    df = pd.DataFrame(columns=["path", "label"])
+    df_v = pd.DataFrame(columns=["path", "label"])
+    df_nv = pd.DataFrame(columns=["path", "label"])
     for v in os.walk("Real Life Violence Dataset/Violence"):
         for vid in v[2]:
             if torch.cuda.is_available():
-                df_v = df.append({
+                df_v = df_v.append({
                     "path": os.getcwd() + "/" + v[0] + "/" + vid,
                     "label": 1
                 }
                     , ignore_index=True)
             else:
-                df_v = df.append({
+                df_v = df_v.append({
                     "path": os.getcwd() + "\\" + v[0].replace("/", "\\") + "\\" + vid,
                     "label": 1
                 }
@@ -24,13 +25,13 @@ def create_path_csv():
     for v in os.walk("Real Life Violence Dataset/NonViolence"):
         for vid in v[2]:
             if torch.cuda.is_available():
-                df_nv = df.append({
+                df_nv = df_nv.append({
                     "path": os.getcwd() + "/" + v[0] + "/" + vid,
                     "label": 0
                 }
                     , ignore_index=True)
             else:
-                df_nv = df.append({
+                df_nv = df_nv.append({
                     "path": os.getcwd() + "\\" + v[0].replace("/", "\\") + "\\" + vid,
                     "label": 0
                 }

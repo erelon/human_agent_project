@@ -92,5 +92,6 @@ class Inception3Model(pl.LightningModule):
     def predict_step(self, batch, batch_idx, dataloader_idx=None):
         x, y = batch
         y_hat = self(x)
-        print(y_hat)
+        tag = torch.argmax(y_hat, dim=1)
+        print(tag, y)
         return y_hat
