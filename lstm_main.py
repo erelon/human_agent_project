@@ -1,21 +1,20 @@
-import os
-
-import tqdm
-from matplotlib import animation
-from pytorch_grad_cam import GradCAM
-from pytorch_grad_cam.utils.image import show_cam_on_image
-
 import video_dataloader.transforms as vtransforms
 import matplotlib.pyplot as plt
 import pytorch_lightning as pl
+import matplotlib as mpl
 import torchvision
-import torch
 import numpy as np
+import torch
+import tqdm
+import os
 
+from pytorch_grad_cam.utils.image import show_cam_on_image
+from pytorch_grad_cam import GradCAMPlusPlus as GradCAM
 from video_parse import create_path_csv
 from torch.utils.data import DataLoader
 from model_lstm import Inception3Model
 from video_dataloader import datasets
+from matplotlib import animation
 
 if __name__ == '__main__':
     # path_train, path_test = create_path_csv()
@@ -54,8 +53,14 @@ if __name__ == '__main__':
     # all_preds = t.predict(model, data_loader_test, return_predictions=True)
     # print(all_preds)
 
+    k = 0
+
+    mpl.rcParams['animation.ffmpeg_path'] = r'C:\\Program Files\\Softdeluxe\\Free Download Manager\\ffmpeg.exe'
+    Writer = animation.writers['ffmpeg']
+    writer = Writer(fps=2, bitrate=1800)
+
     grad_cam = GradCAM(model, model.model_f.inception5b)
-    for vid in data_loader_test:
+    for vid in data_loader_train:
         vids, y = vid
         for v, label in zip(vids, y):
             grads_v = grad_cam(v.unsqueeze(0), target_category=1)
@@ -68,7 +73,6 @@ if __name__ == '__main__':
                 im = im.numpy()
                 visualization_v = show_cam_on_image(im, gradv) / 255
                 visualization_nv = show_cam_on_image(im, gradnv) / 255
-                # im = np.concatenate([visualization_nv, im, visualization_v], axis=1)
                 ims.append([ax1.imshow(visualization_nv, animated=True), ax2.imshow(im, animated=True),
                             ax3.imshow(visualization_v, animated=True)])
             ani = animation.ArtistAnimation(fig, ims, interval=1000, blit=True,
@@ -85,4 +89,9 @@ if __name__ == '__main__':
             for axs in fig.axes:
                 axs.get_xaxis().set_ticks([])
                 axs.get_yaxis().set_ticks([])
+
+            # ani.save(f'{k}.mp4', writer=writer)
+            k += 1
             plt.show(block=True)
+            # fig.clf()
+            plt.close(fig)
