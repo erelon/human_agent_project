@@ -92,8 +92,8 @@ if __name__ == '__main__':
                 axs.get_xaxis().set_ticks([])
                 axs.get_yaxis().set_ticks([])
 
-            # ani.save(f'{k}.mp4', writer=writer)
+            ani.save(f'GradCam/{k}.mp4', writer=writer)
             k += 1
-            plt.show(block=True)
+            # plt.show(block=True)
             # fig.clf()
             plt.close(fig)

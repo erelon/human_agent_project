@@ -42,14 +42,18 @@ def main():
     model = Inception3Model()
     model = model.load_from_checkpoint("95.ckpt")
 
-    stream = create_youtube_stream("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+    stream = create_youtube_stream("https://www.youtube.com/watch?v=Wch3gJG2GJ4&ab_channel=Zetzu500")
     # stream = create_webcam_stream()
+    plt.show()
     while True:
         v = transform(stream)
         ret = model(v[None, :, :, :, :]).flatten()
         print(f'NonViolence: {ret[0]},  Violence: {ret[1]}')
 
-    s.release()
+        # plt.imshow(v.permute(1, 2, 3, 0)[0])
+        # plt.show()
+
+    stream.release()
 
 
 if __name__ == '__main__':
