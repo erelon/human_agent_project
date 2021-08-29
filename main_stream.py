@@ -58,6 +58,8 @@ def main():
 
     model = Inception3Model()
     model = model.load_from_checkpoint("95.ckpt")
+    if torch.cuda.is_available():
+        model.to(torch.device("cuda"))
 
     model.eval()
     with torch.no_grad():
