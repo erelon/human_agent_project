@@ -1,7 +1,6 @@
 import torch
 import torchvision
 import numpy as np
-import PIL
 import collections
 import random
 import cv2

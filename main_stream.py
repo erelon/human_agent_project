@@ -1,23 +1,10 @@
 import video_dataloader.transforms as vtransforms
-import matplotlib.pyplot as plt
-import pytorch_lightning as pl
-import matplotlib as mpl
 import torchvision
-import numpy as np
 import torch
-import tqdm
 import sys
-import os
-
-from pytorch_grad_cam.utils.image import show_cam_on_image
-from pytorch_grad_cam import GradCAMPlusPlus as GradCAM
-from video_parse import create_path_csv
-from torch.utils.data import DataLoader
-from model_lstm import Inception3Model
-from video_dataloader import datasets
-from matplotlib import animation
-from datetime import datetime
 import cv2
+
+from model_lstm import Inception3Model
 
 
 def create_youtube_stream(url):  # for example "https://www.youtube.com/watch?v=dQw4w9WgXcQ"

@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 import pytorch_lightning as pl
 import numpy as np
 import torch
@@ -7,7 +6,6 @@ import os
 
 from torch.utils.data import DataLoader, TensorDataset, ConcatDataset
 from sklearn.model_selection import train_test_split
-from torchvision.transforms import transforms
 from model import Inception3Model
 from tqdm import tqdm
 

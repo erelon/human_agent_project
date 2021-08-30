@@ -1,7 +1,10 @@
+"""
+Source: https://github.com/metra4ok/MLSTM-FCN-Pytorch/blob/main/src/model.py
+"""
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import torch.optim as optim
 
 
 class SELayer(nn.Module):

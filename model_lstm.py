@@ -3,7 +3,7 @@ import gc
 import torch
 import pytorch_lightning as pl
 import torch.nn.functional as F
-from torchvision.models import inception_v3, googlenet, MobileNetV3
+from torchvision.models import googlenet
 from torchmetrics import Accuracy, AUROC
 
 from mlstmfcn import MLSTMfcn

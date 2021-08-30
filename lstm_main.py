@@ -1,14 +1,9 @@
-from datetime import datetime
-
 import video_dataloader.transforms as vtransforms
 import matplotlib.pyplot as plt
 import pytorch_lightning as pl
 import matplotlib as mpl
 import torchvision
-import numpy as np
 import torch
-import tqdm
-import os
 
 from pytorch_grad_cam.utils.image import show_cam_on_image
 from pytorch_grad_cam import GradCAMPlusPlus as GradCAM
