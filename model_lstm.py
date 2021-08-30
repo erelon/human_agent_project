@@ -1,10 +1,9 @@
-import gc
-
-import torch
-import pytorch_lightning as pl
-import torch.nn.functional as F
 from torchvision.models import googlenet
 from torchmetrics import Accuracy, AUROC
+import torch.nn.functional as F
+import pytorch_lightning as pl
+import torch
+import gc
 
 from mlstmfcn import MLSTMfcn
 

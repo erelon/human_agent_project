@@ -1,0 +1,10 @@
+pytorch_lightning
+opencv-python
+torchmetrics
+scikit-learn
+torchvision
+matplotlib
+pandas
+numpy
+torch
+tqdm

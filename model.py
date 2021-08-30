@@ -1,6 +1,7 @@
-import torch
-import pytorch_lightning as pl
 import torch.nn.functional as F
+import pytorch_lightning as pl
+import torch
+
 from torchvision.models import Inception3
 
 
@@ -8,7 +9,6 @@ class Inception3Model(pl.LightningModule):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = Inception3(num_classes=2, transform_input=True, aux_logits=False)
-
 
     def forward(self, x):
         x = self.model(x.permute(0, 3, 1, 2)).logits
